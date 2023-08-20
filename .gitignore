@@ -20,6 +20,9 @@ OSExtentions.cs
 # VSCode
 .vscode/
 
+# JetBrains Rider
+.idea/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
