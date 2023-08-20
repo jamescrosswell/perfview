@@ -1,4 +1,6 @@
-﻿using FastSerialization;
+#nullable disable
+
+using FastSerialization;
 using Microsoft.Diagnostics.NETCore.Client;
 using Microsoft.Diagnostics.Tracing;
 using Microsoft.Diagnostics.Tracing.Etlx;
@@ -19,7 +21,7 @@ using static Microsoft.Diagnostics.Tracing.Etlx.TraceLog;
 
 namespace TraceEventTests
 {
-    public class EventPipeParsing : EventPipeTestBase
+    internal class EventPipeParsing : EventPipeTestBase
     {
         private class EventRecord
         {

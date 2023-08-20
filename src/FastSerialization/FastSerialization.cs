@@ -1,3 +1,5 @@
+#nullable disable
+
 //     Copyright (c) Microsoft Corporation.  All rights reserved.
 /* This file is best viewed using outline mode (Ctrl-M Ctrl-O) */
 // This program uses code hyperlinks available as part of the HyperAddin Visual Studio plug-in.
@@ -142,7 +144,7 @@ namespace FastSerialization
 #if FASTSERIALIZATION_PUBLIC
     public
 #endif
-    interface IStreamWriter : IDisposable
+   internal  interface IStreamWriter : IDisposable
     {
         /// <summary>
         /// Write a byte to a stream
@@ -197,7 +199,7 @@ namespace FastSerialization
 #if FASTSERIALIZATION_PUBLIC
     public
 #endif
-    interface IStreamReader : IDisposable
+   internal  interface IStreamReader : IDisposable
     {
         /// <summary>
         /// Read a byte from the stream
@@ -2290,7 +2292,7 @@ namespace FastSerialization
 #if FASTSERIALIZATION_PUBLIC
     public
 #endif
-    interface IFastSerializable
+   internal  interface IFastSerializable
     {
         /// <summary>
         /// Given a Serializer, write yourself to the output stream. Conceptually this routine is NOT
@@ -2340,7 +2342,7 @@ namespace FastSerialization
 #if FASTSERIALIZATION_PUBLIC
     public
 #endif
-    interface IFastSerializableVersion
+   internal  interface IFastSerializableVersion
     {
         /// <summary>
         /// This is the version number for the serialization CODE (that is the app decoding the format)
@@ -2559,9 +2561,9 @@ namespace FastSerialization
     #endregion
 
 #if false
-    public class SerializationTests
+    internal class SerializationTests
     {
-        public class MyClass1 : IFastSerializable, IFastSerializableVersion
+        internal class MyClass1 : IFastSerializable, IFastSerializableVersion
         {
             DeferedRegion lazy;
             private int value;

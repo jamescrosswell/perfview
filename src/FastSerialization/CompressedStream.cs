@@ -1,3 +1,5 @@
+#nullable disable
+
 // This file is best viewed using outline mode (Ctrl-M Ctrl-O)
 //
 //	Copyright (C) 2007 Microsoft Corporation.  All Rights Reserved.
@@ -724,7 +726,7 @@ namespace Utilities
                 }
             }
 
-            public class DataBlock : IDisposable
+            internal class DataBlock : IDisposable
             {
                 internal DataBlock(int blockSize, StreamCache cache, DataBlock next)
                 {

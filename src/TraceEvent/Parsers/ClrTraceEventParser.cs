@@ -1,3 +1,5 @@
+#nullable disable
+
 //     Copyright (c) Microsoft Corporation.  All rights reserved.
 using FastSerialization;
 using Microsoft.Diagnostics.Tracing.Etlx;
@@ -22,7 +24,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers
     /* ClrPrivateTraceEventParser  #ClrPrivateProvider */
     // [SecuritySafeCritical]
     [System.CodeDom.Compiler.GeneratedCode("traceparsergen", "1.0")]
-    public sealed class ClrTraceEventParser : TraceEventParser
+    internal sealed class ClrTraceEventParser : TraceEventParser
     {
         public static readonly string ProviderName = "Microsoft-Windows-DotNETRuntime";
         public static readonly Guid ProviderGuid = new Guid(unchecked((int)0xe13c0d23), unchecked((short)0xccbc), unchecked((short)0x4e12), 0x93, 0x1b, 0xd9, 0xcc, 0x2e, 0xee, 0x27, 0xe4);
@@ -34,7 +36,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers
         ///  Keywords are passed to TraceEventSession.EnableProvider to enable particular sets of
         /// </summary>
         [Flags]
-        public enum Keywords : long
+        internal enum Keywords : long
         {
             None = 0,
             All = ~StartEnumeration,        // All does not include start-enumeration.  It just is not that useful.
@@ -2429,7 +2431,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers
 
 namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
 {
-    public sealed class JitInstrumentationDataTraceData : TraceEvent
+    internal sealed class JitInstrumentationDataTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public int MethodFlags { get { return GetInt32At(2); } }
@@ -2500,7 +2502,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<JitInstrumentationDataTraceData> m_target;
         #endregion
     }
-    public sealed class JitInstrumentationDataVerboseTraceData : TraceEvent
+    internal sealed class JitInstrumentationDataVerboseTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public int MethodFlags { get { return GetInt32At(2); } }
@@ -2589,7 +2591,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<JitInstrumentationDataVerboseTraceData> m_target;
         #endregion
     }
-    public sealed class GenAwareTemplateTraceData : TraceEvent
+    internal sealed class GenAwareTemplateTraceData : TraceEvent
     {
         public int Count { get { return GetInt32At(0); } }
         public int ClrInstanceID { get { return GetInt16At(4); } }
@@ -2650,7 +2652,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCLOHCompactInfo
+    internal sealed class GCLOHCompactInfo
     {
         /// <summary>
         /// The time spent on planing the LOH for compaction
@@ -2713,7 +2715,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCLOHCompactTraceData : TraceEvent
+    internal sealed class GCLOHCompactTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
 
@@ -2807,7 +2809,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCFitBucket
+    internal sealed class GCFitBucket
     {
         #region private
         internal GCFitBucket(int index, int count, long size)
@@ -2857,7 +2859,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// <summary>
     /// BucketKind is used to describe the type of the GCFitBucketInfo events.
     /// </summary>
-    public enum BucketKind
+    internal enum BucketKind
     {
         /// <summary>
         /// When the BucketKind is LargestFreeListItems, the free list items in Gen2 are counted and reported
@@ -2873,7 +2875,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         PlugsInCondemned = 1
     }
 
-    public sealed class GCFitBucketInfoTraceData : TraceEvent
+    internal sealed class GCFitBucketInfoTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
 
@@ -2988,7 +2990,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCFitBucketInfoTraceData> Action;
         #endregion
     }
-    public sealed class GCStartTraceData : TraceEvent
+    internal sealed class GCStartTraceData : TraceEvent
     {
         public int Count { get { return GetInt32At(0); } }
         public GCReason Reason { get { if (EventDataLength >= 16) { return (GCReason)GetInt32At(8); } return (GCReason)GetInt32At(4); } }
@@ -3069,7 +3071,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCStartTraceData> Action;
         #endregion
     }
-    public sealed class GCEndTraceData : TraceEvent
+    internal sealed class GCEndTraceData : TraceEvent
     {
         public int Count { get { return GetInt32At(0); } }
         public int Depth { get { if (Version >= 1) { return GetInt32At(4); } return GetInt16At(4); } }
@@ -3138,7 +3140,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCEndTraceData> Action;
         #endregion
     }
-    public sealed class GCNoUserDataTraceData : TraceEvent
+    internal sealed class GCNoUserDataTraceData : TraceEvent
     {
         public int ClrInstanceID { get { if (Version >= 1) { return GetInt16At(0); } return 0; } }
 
@@ -3199,7 +3201,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCHeapStatsTraceData : TraceEvent
+    internal sealed class GCHeapStatsTraceData : TraceEvent
     {
         // GCHeap stats are reported AFTER the GC has completed.  Thus these number are the 'After' heap size for each generation
         // The sizes INCLUDE fragmentation (holes in the segement)
@@ -3358,7 +3360,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCHeapStatsTraceData> Action;
         #endregion
     }
-    public sealed class GCCreateSegmentTraceData : TraceEvent
+    internal sealed class GCCreateSegmentTraceData : TraceEvent
     {
         public ulong Address { get { return (Address)GetInt64At(0); } }
         public ulong Size { get { return (Address)GetInt64At(8); } }
@@ -3431,7 +3433,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCCreateSegmentTraceData> Action;
         #endregion
     }
-    public sealed class GCFreeSegmentTraceData : TraceEvent
+    internal sealed class GCFreeSegmentTraceData : TraceEvent
     {
         public long Address { get { return GetInt64At(0); } }
         public int ClrInstanceID { get { if (Version >= 1) { return GetInt16At(8); } return 0; } }
@@ -3496,7 +3498,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCFreeSegmentTraceData> Action;
         #endregion
     }
-    public sealed class GCSuspendEETraceData : TraceEvent
+    internal sealed class GCSuspendEETraceData : TraceEvent
     {
         public GCSuspendEEReason Reason { get { if (Version >= 1) { return (GCSuspendEEReason)GetInt32At(0); } return (GCSuspendEEReason)GetInt16At(0); } }
         public int Count { get { if (Version >= 1) { return GetInt32At(4); } return 0; } }
@@ -3565,7 +3567,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCSuspendEETraceData> Action;
         #endregion
     }
-    public sealed class ExceptionHandlingTraceData : TraceEvent
+    internal sealed class ExceptionHandlingTraceData : TraceEvent
     {
         public long EntryEIP { get { return GetInt64At(0); } }
         public long MethodID { get { return GetInt64At(8); } }
@@ -3638,7 +3640,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCAllocationTickTraceData : TraceEvent
+    internal sealed class GCAllocationTickTraceData : TraceEvent
     {
         public int AllocationAmount { get { return GetInt32At(0); } }
         public GCAllocationKind AllocationKind { get { return (GCAllocationKind)GetInt32At(4); } }
@@ -3768,7 +3770,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCAllocationTickTraceData> Action;
         #endregion
     }
-    public sealed class GCCreateConcurrentThreadTraceData : TraceEvent
+    internal sealed class GCCreateConcurrentThreadTraceData : TraceEvent
     {
         public int ClrInstanceID { get { if (Version >= 1) { return GetInt16At(0); } return 0; } }
 
@@ -3828,7 +3830,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCCreateConcurrentThreadTraceData> Action;
         #endregion
     }
-    public sealed class GCTerminateConcurrentThreadTraceData : TraceEvent
+    internal sealed class GCTerminateConcurrentThreadTraceData : TraceEvent
     {
         public int ClrInstanceID { get { if (Version >= 1) { return GetInt16At(0); } return 0; } }
 
@@ -3888,7 +3890,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCTerminateConcurrentThreadTraceData> Action;
         #endregion
     }
-    public sealed class GCFinalizersEndTraceData : TraceEvent
+    internal sealed class GCFinalizersEndTraceData : TraceEvent
     {
         public int Count { get { return GetInt32At(0); } }
         public int ClrInstanceID { get { if (Version >= 1) { return GetInt16At(4); } return 0; } }
@@ -3954,7 +3956,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class MethodDetailsTraceData : TraceEvent
+    internal sealed class MethodDetailsTraceData : TraceEvent
     {
         public long MethodID { get { return GetInt64At(0); } }
         public long TypeID { get { return GetInt64At(8); } }
@@ -4043,7 +4045,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<MethodDetailsTraceData> Action;
         #endregion
     }
-    public sealed class GCBulkTypeTraceData : TraceEvent
+    internal sealed class GCBulkTypeTraceData : TraceEvent
     {
         public int Count { get { return GetInt32At(0); } }
         public int ClrInstanceID { get { return GetInt16At(4); } }
@@ -4179,7 +4181,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the BulkTypeTraceData.  It can only be used as long as
     /// the BulkTypeTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkTypeValues
+    internal struct GCBulkTypeValues
     {
         /// <summary>
         /// On the desktop this is the Method Table Pointer
@@ -4266,7 +4268,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCBulkRootEdgeTraceData : TraceEvent
+    internal sealed class GCBulkRootEdgeTraceData : TraceEvent
     {
         public int Index { get { return GetInt32At(0); } }
         public int Count { get { return GetInt32At(4); } }
@@ -4351,7 +4353,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkEdgeTraceData.  It can only be used as long as
     /// the GCBulkEdgeTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkRootEdgeValues
+    internal struct GCBulkRootEdgeValues
     {
         public Address RootedNodeAddress { get { return m_data.GetAddressAt(m_baseOffset); } }
         public GCRootKind GCRootKind { get { return (GCRootKind)m_data.GetByteAt(m_data.HostOffset(m_baseOffset + 4, 1)); } }
@@ -4387,7 +4389,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCBulkRootConditionalWeakTableElementEdgeTraceData : TraceEvent
+    internal sealed class GCBulkRootConditionalWeakTableElementEdgeTraceData : TraceEvent
     {
         public int Index { get { return GetInt32At(0); } }
         public int Count { get { return GetInt32At(4); } }
@@ -4474,7 +4476,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkRootConditionalWeakTableElementEdgeTraceData.  It can only be used as long as
     /// the GCBulkRootConditionalWeakTableElementEdgeTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkRootConditionalWeakTableElementEdgeValues
+    internal struct GCBulkRootConditionalWeakTableElementEdgeValues
     {
         public Address GCKeyNodeID { get { return m_data.GetAddressAt(m_baseOffset); } }
         public Address GCValueNodeID { get { return m_data.GetAddressAt(m_data.HostOffset(m_baseOffset + 4, 1)); } }
@@ -4508,7 +4510,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCBulkNodeTraceData : TraceEvent
+    internal sealed class GCBulkNodeTraceData : TraceEvent
     {
         public int Index { get { return GetInt32At(0); } }
         public int Count { get { return GetInt32At(4); } }
@@ -4623,7 +4625,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkNodeTraceData.  It can only be used as long as
     /// the GCBulkNodeTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkNodeValues
+    internal struct GCBulkNodeValues
     {
         public Address Address { get { return m_data.GetAddressAt(m_baseOffset); } }
         public Address Size { get { return m_data.GetAddressAt(m_data.HostOffset(m_baseOffset + 4, 1)); } }
@@ -4670,7 +4672,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct GCBulkNodeUnsafeNodes
+    internal struct GCBulkNodeUnsafeNodes
     {
         public Address Address;
         public Address Size;
@@ -4678,7 +4680,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         public long EdgeCount;
     }
 
-    public sealed class GCBulkEdgeTraceData : TraceEvent
+    internal sealed class GCBulkEdgeTraceData : TraceEvent
     {
         public int Index { get { return GetInt32At(0); } }
         public int Count { get { return GetInt32At(4); } }
@@ -4763,7 +4765,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkNodeTraceData.  It can only be used as long as
     /// the GCBulkNodeTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkEdgeValues
+    internal struct GCBulkEdgeValues
     {
         public Address Target { get { return m_data.GetAddressAt(m_baseOffset); } }
         public int ReferencingField { get { return m_data.GetInt32At(m_data.HostOffset(m_baseOffset + 4, 1)); } }
@@ -4794,7 +4796,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCSampledObjectAllocationTraceData : TraceEvent
+    internal sealed class GCSampledObjectAllocationTraceData : TraceEvent
     {
         public Address Address { get { return GetAddressAt(0); } }
         public Address TypeID { get { return GetAddressAt(HostOffset(4, 1)); } }
@@ -4870,7 +4872,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCSampledObjectAllocationTraceData> Action;
         #endregion
     }
-    public sealed class GCBulkSurvivingObjectRangesTraceData : TraceEvent
+    internal sealed class GCBulkSurvivingObjectRangesTraceData : TraceEvent
     {
         public int Index { get { return GetInt32At(0); } }
         public int Count { get { return GetInt32At(4); } }
@@ -4954,7 +4956,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkEdgeTraceData.  It can only be used as long as
     /// the GCBulkEdgeTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkSurvivingObjectRangesValues
+    internal struct GCBulkSurvivingObjectRangesValues
     {
         public Address RangeBase { get { return m_data.GetAddressAt(m_baseOffset); } }
         public Address RangeLength { get { return (Address)m_data.GetInt64At(m_data.HostOffset(m_baseOffset + 4, 1)); } }
@@ -4985,7 +4987,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCBulkMovedObjectRangesTraceData : TraceEvent
+    internal sealed class GCBulkMovedObjectRangesTraceData : TraceEvent
     {
         public int Index { get { return GetInt32At(0); } }
         public int Count { get { return GetInt32At(4); } }
@@ -5069,7 +5071,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkEdgeTraceData.  It can only be used as long as
     /// the GCBulkEdgeTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkMovedObjectRangesValues
+    internal struct GCBulkMovedObjectRangesValues
     {
         public Address OldRangeBase { get { return m_data.GetAddressAt(m_baseOffset); } }
         public Address NewRangeBase { get { return m_data.GetAddressAt(m_data.HostOffset(m_baseOffset + 4, 1)); } }
@@ -5103,7 +5105,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCGenerationRangeTraceData : TraceEvent
+    internal sealed class GCGenerationRangeTraceData : TraceEvent
     {
         public int Generation { get { return GetByteAt(0); } }
         public Address RangeStart { get { return GetAddressAt(1); } }
@@ -5180,7 +5182,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public enum MarkRootType
+    internal enum MarkRootType
     {
         MarkStack = 0,
         MarkFQ = 1,
@@ -5195,7 +5197,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         MarkMax = 10,
     }
 
-    public sealed class GCMarkTraceData : TraceEvent
+    internal sealed class GCMarkTraceData : TraceEvent
     {
         public int HeapNum { get { return GetInt32At(0); } }
         public int ClrInstanceID { get { return GetInt16At(4); } }
@@ -5259,7 +5261,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCMarkTraceData> Action;
         #endregion
     }
-    public sealed class GCMarkWithTypeTraceData : TraceEvent
+    internal sealed class GCMarkWithTypeTraceData : TraceEvent
     {
         public int HeapNum { get { return GetInt32At(0); } }
         public int ClrInstanceID { get { return GetInt16At(4); } }
@@ -5334,7 +5336,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// <summary>
     /// We keep Heap history for every Generation in 'Gens'
     /// </summary>
-    public enum Gens
+    internal enum Gens
     {
         Gen0,
         Gen1,
@@ -5347,7 +5349,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// <summary>
     /// Taken from gcrecords.h, used to differentiate heap expansion and compaction reasons
     /// </summary>
-    public enum gc_heap_expand_mechanism : int
+    internal enum gc_heap_expand_mechanism : int
     {
         expand_reuse_normal = 0,
         expand_reuse_bestfit = 1,
@@ -5358,7 +5360,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         max_expand_mechanisms_count = 6,
         not_specified = 1024
     }
-    public enum gc_heap_compact_reason : int
+    internal enum gc_heap_compact_reason : int
     {
         compact_low_ephemeral = 0,
         compact_high_frag = 1,
@@ -5374,7 +5376,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         max_compact_reasons_count = 11,
         not_specified = 1024
     }
-    public enum gc_concurrent_compact_reason : int
+    internal enum gc_concurrent_compact_reason : int
     {
         concurrent_compact_high_frag = 0,
         concurrent_compact_c_mark = 1,
@@ -5549,7 +5551,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// Version 3 is now setup to allow "add to the end" scenarios
     ///
     /// </summary>
-    public sealed class GCPerHeapHistoryTraceData : TraceEvent
+    internal sealed class GCPerHeapHistoryTraceData : TraceEvent
     {
         public int ClrInstanceID
         {
@@ -6395,7 +6397,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public enum GCExpandMechanism : uint
+    internal enum GCExpandMechanism : uint
     {
         None = 0,
         ReuseNormal = 0x80000000,
@@ -6447,7 +6449,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     ///    +0x020 npinned_surv           : Uint4B/8B
     ///    +0x024 new_allocation         : Uint4B/8B
     /// </summary>
-    public sealed class GCPerHeapHistoryGenData
+    internal sealed class GCPerHeapHistoryGenData
     {
         /// <summary>
         /// Size of the generation before the GC, includes fragmentation
@@ -6942,7 +6944,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     ///                          gc_data_global.mem_pressure);
     ///
     /// </summary>
-    public sealed class GCGlobalHeapHistoryTraceData : TraceEvent
+    internal sealed class GCGlobalHeapHistoryTraceData : TraceEvent
     {
         public long FinalYoungestDesired { get { return GetInt64At(0); } }
         public int NumHeaps { get { return GetInt32At(8); } }
@@ -7106,7 +7108,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public enum GcJoinType : int
+    internal enum GcJoinType : int
     {
         LastJoin = 0,
         Join = 1,
@@ -7114,19 +7116,19 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         FirstJoin = 3
     }
 
-    public enum GcJoinTime : int
+    internal enum GcJoinTime : int
     {
         Start = 0,
         End = 1
     }
 
-    public enum GcJoinID : int
+    internal enum GcJoinID : int
     {
         Restart = -1,
         Invalid = ~(int)0xff
     }
 
-    public sealed class GCJoinTraceData : TraceEvent
+    internal sealed class GCJoinTraceData : TraceEvent
     {
         public int Heap { get { return GetInt32At(0); } }
         public GcJoinTime JoinTime { get { return (GcJoinTime)GetInt32At(4); } }
@@ -7203,7 +7205,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class FinalizeObjectTraceData : TraceEvent
+    internal sealed class FinalizeObjectTraceData : TraceEvent
     {
         public Address TypeID { get { return GetAddressAt(0); } }
         public Address ObjectID { get { return GetAddressAt(HostOffset(4, 1)); } }
@@ -7290,7 +7292,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private ClrTraceEventParserState state;
         #endregion
     }
-    public sealed class SetGCHandleTraceData : TraceEvent
+    internal sealed class SetGCHandleTraceData : TraceEvent
     {
         public Address HandleID { get { return GetAddressAt(0); } }
         public Address ObjectID { get { return GetAddressAt(HostOffset(4, 1)); } }
@@ -7370,7 +7372,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<SetGCHandleTraceData> Action;
         #endregion
     }
-    public sealed class DestroyGCHandleTraceData : TraceEvent
+    internal sealed class DestroyGCHandleTraceData : TraceEvent
     {
         public Address HandleID { get { return GetAddressAt(0); } }
         public int ClrInstanceID { get { return GetInt16At(HostOffset(4, 1)); } }
@@ -7434,7 +7436,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<DestroyGCHandleTraceData> Action;
         #endregion
     }
-    public sealed class PinObjectAtGCTimeTraceData : TraceEvent
+    internal sealed class PinObjectAtGCTimeTraceData : TraceEvent
     {
         public Address HandleID { get { return GetAddressAt(0); } }
         public Address ObjectID { get { return GetAddressAt(HostOffset(4, 1)); } }
@@ -7511,7 +7513,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<PinObjectAtGCTimeTraceData> Action;
         #endregion
     }
-    public sealed class PinPlugAtGCTimeTraceData : TraceEvent
+    internal sealed class PinPlugAtGCTimeTraceData : TraceEvent
     {
         public Address PlugStart { get { return GetAddressAt(0); } }
         public Address PlugEnd { get { return GetAddressAt(HostOffset(4, 1)); } }
@@ -7583,7 +7585,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<PinPlugAtGCTimeTraceData> Action;
         #endregion
     }
-    public sealed class GCTriggeredTraceData : TraceEvent
+    internal sealed class GCTriggeredTraceData : TraceEvent
     {
         public GCReason Reason { get { return (GCReason)GetInt32At(0); } }
         public int ClrInstanceID { get { return GetInt16At(4); } }
@@ -7647,7 +7649,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<GCTriggeredTraceData> Action;
         #endregion
     }
-    public sealed class GCBulkRootCCWTraceData : TraceEvent
+    internal sealed class GCBulkRootCCWTraceData : TraceEvent
     {
         public int Count
         {
@@ -7764,7 +7766,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkRootCCWTraceData.  It can only be used as long as
     /// the GCBulkRootCCWTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkRootCCWValues
+    internal struct GCBulkRootCCWValues
     {
         public Address GCRootID { get { return m_data.GetAddressAt(m_baseOffset); } }
         public Address ObjectID { get { return m_data.GetAddressAt(m_baseOffset + 8); } }
@@ -7809,7 +7811,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCBulkRCWTraceData : TraceEvent
+    internal sealed class GCBulkRCWTraceData : TraceEvent
     {
         public int Count
         {
@@ -7904,7 +7906,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkRCWTraceData.  It can only be used as long as
     /// the GCBulkRCWTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkRCWValues
+    internal struct GCBulkRCWValues
     {
         public Address ObjectID { get { return m_data.GetAddressAt(m_baseOffset); } }
         public Address TypeID { get { return m_data.GetAddressAt(m_baseOffset + 8); } }
@@ -7946,7 +7948,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class GCBulkRootStaticVarTraceData : TraceEvent
+    internal sealed class GCBulkRootStaticVarTraceData : TraceEvent
     {
         public int Count { get { return GetInt32At(0); } }
         public long AppDomainID { get { return GetInt64At(4); } }
@@ -8067,7 +8069,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     /// This structure just POINTS at the data in the GCBulkRootStaticVarTraceData.  It can only be used as long as
     /// the GCBulkRootStaticVarTraceData is alive which (unless you cloned it) is only for the lifetime of the callback.
     /// </summary>
-    public struct GCBulkRootStaticVarValues
+    internal struct GCBulkRootStaticVarValues
     {
         public Address GCRootID { get { return (Address)m_data.GetInt64At(m_baseOffset); } }
         public Address ObjectID { get { return (Address)m_data.GetInt64At(m_baseOffset + 8); } }
@@ -8106,7 +8108,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class ClrWorkerThreadTraceData : TraceEvent
+    internal sealed class ClrWorkerThreadTraceData : TraceEvent
     {
         public int WorkerThreadCount { get { return GetInt32At(0); } }
         public int RetiredWorkerThreads { get { return GetInt32At(4); } }
@@ -8170,7 +8172,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ClrWorkerThreadTraceData> Action;
         #endregion
     }
-    public sealed class IOThreadTraceData : TraceEvent
+    internal sealed class IOThreadTraceData : TraceEvent
     {
         public int IOThreadCount { get { return GetInt32At(0); } }
         public int RetiredIOThreads { get { return GetInt32At(4); } }
@@ -8239,7 +8241,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<IOThreadTraceData> Action;
         #endregion
     }
-    public sealed class ClrThreadPoolSuspendTraceData : TraceEvent
+    internal sealed class ClrThreadPoolSuspendTraceData : TraceEvent
     {
         public int ClrThreadID { get { return GetInt32At(0); } }
         public int CpuUtilization { get { return GetInt32At(4); } }
@@ -8303,7 +8305,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ClrThreadPoolSuspendTraceData> Action;
         #endregion
     }
-    public sealed class ThreadPoolWorkerThreadTraceData : TraceEvent
+    internal sealed class ThreadPoolWorkerThreadTraceData : TraceEvent
     {
         public int ActiveWorkerThreadCount { get { return GetInt32At(0); } }
         public int RetiredWorkerThreadCount { get { return GetInt32At(4); } }
@@ -8371,7 +8373,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolWorkerThreadTraceData> Action;
         #endregion
     }
-    public sealed class ThreadPoolMinMaxThreadsTraceData : TraceEvent
+    internal sealed class ThreadPoolMinMaxThreadsTraceData : TraceEvent
     {
         public int MinWorkerThreads { get { return GetInt16At(0); } }
         public int MaxWorkerThreads { get { return GetInt16At(2); } }
@@ -8447,7 +8449,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolMinMaxThreadsTraceData> Action;
         #endregion
     }
-    public sealed class ThreadPoolWorkerThreadAdjustmentSampleTraceData : TraceEvent
+    internal sealed class ThreadPoolWorkerThreadAdjustmentSampleTraceData : TraceEvent
     {
         public double Throughput { get { return GetDoubleAt(0); } }
         public int ClrInstanceID { get { return GetInt16At(8); } }
@@ -8511,7 +8513,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolWorkerThreadAdjustmentSampleTraceData> Action;
         #endregion
     }
-    public sealed class ThreadPoolWorkerThreadAdjustmentTraceData : TraceEvent
+    internal sealed class ThreadPoolWorkerThreadAdjustmentTraceData : TraceEvent
     {
         public double AverageThroughput { get { return GetDoubleAt(0); } }
         public int NewWorkerThreadCount { get { return GetInt32At(8); } }
@@ -8583,7 +8585,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolWorkerThreadAdjustmentTraceData> Action;
         #endregion
     }
-    public sealed class ThreadPoolWorkerThreadAdjustmentStatsTraceData : TraceEvent
+    internal sealed class ThreadPoolWorkerThreadAdjustmentStatsTraceData : TraceEvent
     {
         public double Duration { get { return GetDoubleAt(0); } }
         public double Throughput { get { return GetDoubleAt(8); } }
@@ -8683,7 +8685,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolWorkerThreadAdjustmentStatsTraceData> Action;
         #endregion
     }
-    public sealed class YieldProcessorMeasurementTraceData : TraceEvent
+    internal sealed class YieldProcessorMeasurementTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public double NsPerYield { get { return GetDoubleAt(2); } }
@@ -8748,7 +8750,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<YieldProcessorMeasurementTraceData> m_target;
         #endregion
     }
-    public sealed class ThreadPoolWorkingThreadCountTraceData : TraceEvent
+    internal sealed class ThreadPoolWorkingThreadCountTraceData : TraceEvent
     {
         public int Count { get { return GetInt32At(0); } }
         public int ClrInstanceID { get { return GetInt16At(4); } }
@@ -8812,7 +8814,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolWorkingThreadCountTraceData> Action;
         #endregion
     }
-    public sealed class ThreadPoolWorkTraceData : TraceEvent
+    internal sealed class ThreadPoolWorkTraceData : TraceEvent
     {
         public Address WorkID { get { return GetAddressAt(0); } }
         public int ClrInstanceID { get { return GetInt16At(HostOffset(4, 1)); } }
@@ -8876,7 +8878,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolWorkTraceData> Action;
         #endregion
     }
-    public sealed class ThreadPoolIOWorkEnqueueTraceData : TraceEvent
+    internal sealed class ThreadPoolIOWorkEnqueueTraceData : TraceEvent
     {
         public Address NativeOverlapped { get { return GetAddressAt(0); } }
         public Address Overlapped { get { return GetAddressAt(HostOffset(4, 1)); } }
@@ -8948,7 +8950,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolIOWorkEnqueueTraceData> Action;
         #endregion
     }
-    public sealed class ThreadPoolIOWorkTraceData : TraceEvent
+    internal sealed class ThreadPoolIOWorkTraceData : TraceEvent
     {
         public Address NativeOverlapped { get { return GetAddressAt(0); } }
         public Address Overlapped { get { return GetAddressAt(HostOffset(4, 1)); } }
@@ -9016,7 +9018,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadPoolIOWorkTraceData> Action;
         #endregion
     }
-    public sealed class ThreadStartWorkTraceData : TraceEvent
+    internal sealed class ThreadStartWorkTraceData : TraceEvent
     {
         public Address ThreadStartWorkID { get { return GetAddressAt(0); } }
         public int ClrInstanceID { get { return GetInt16At(HostOffset(4, 1)); } }
@@ -9080,7 +9082,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadStartWorkTraceData> Action;
         #endregion
     }
-    public sealed class TieredCompilationEmptyTraceData : TraceEvent
+    internal sealed class TieredCompilationEmptyTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
 
@@ -9137,7 +9139,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<TieredCompilationEmptyTraceData> m_target;
         #endregion
     }
-    public sealed class TieredCompilationSettingsTraceData : TraceEvent
+    internal sealed class TieredCompilationSettingsTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public TieredCompilationSettingsFlags Flags { get { return (TieredCompilationSettingsFlags)GetInt32At(2); } }
@@ -9198,7 +9200,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<TieredCompilationSettingsTraceData> m_target;
         #endregion
     }
-    public sealed class TieredCompilationResumeTraceData : TraceEvent
+    internal sealed class TieredCompilationResumeTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public int NewMethodCount { get { return GetInt32At(2); } }
@@ -9259,7 +9261,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<TieredCompilationResumeTraceData> m_target;
         #endregion
     }
-    public sealed class TieredCompilationBackgroundJitStartTraceData : TraceEvent
+    internal sealed class TieredCompilationBackgroundJitStartTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public int PendingMethodCount { get { return GetInt32At(2); } }
@@ -9320,7 +9322,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<TieredCompilationBackgroundJitStartTraceData> m_target;
         #endregion
     }
-    public sealed class TieredCompilationBackgroundJitStopTraceData : TraceEvent
+    internal sealed class TieredCompilationBackgroundJitStopTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public int PendingMethodCount { get { return GetInt32At(2); } }
@@ -9385,7 +9387,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<TieredCompilationBackgroundJitStopTraceData> m_target;
         #endregion
     }
-    public sealed class ExceptionTraceData : TraceEvent
+    internal sealed class ExceptionTraceData : TraceEvent
     {
         public string ExceptionType { get { if (Version >= 1) { return GetUnicodeStringAt(0); } return ""; } }
         public string ExceptionMessage { get { if (Version >= 1) { return GetUnicodeStringAt(SkipUnicodeString(0)); } return ""; } }
@@ -9465,7 +9467,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ExceptionTraceData> Action;
         #endregion
     }
-    public sealed class ContentionLockCreatedTraceData : TraceEvent
+    internal sealed class ContentionLockCreatedTraceData : TraceEvent
     {
         public Address LockID { get { return (Address)GetInt64At(0); } }
         public Address AssociatedObjectID { get { return (Address)GetInt64At(8); } }
@@ -9530,7 +9532,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ContentionLockCreatedTraceData> m_target;
         #endregion
     }
-    public sealed class ContentionStartTraceData : TraceEvent
+    internal sealed class ContentionStartTraceData : TraceEvent
     {
         public ContentionFlags ContentionFlags { get { if (Version >= 1) return (ContentionFlags)GetByteAt(0); return (ContentionFlags)0; } }
         public int ClrInstanceID { get { if (Version >= 1) return GetInt16At(1); return 0; } }
@@ -9606,7 +9608,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ContentionStartTraceData> m_target;
         #endregion
     }
-    public sealed class ContentionStopTraceData : TraceEvent
+    internal sealed class ContentionStopTraceData : TraceEvent
     {
         public ContentionFlags ContentionFlags { get { return (ContentionFlags)GetByteAt(0); } }
         public int ClrInstanceID { get { return GetInt16At(1); } }
@@ -9672,7 +9674,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ContentionStopTraceData> m_target;
         #endregion
     }
-    public sealed class R2RGetEntryPointTraceData : TraceEvent
+    internal sealed class R2RGetEntryPointTraceData : TraceEvent
     {
         public long MethodID { get { return GetInt64At(0); } }
         public string MethodNamespace { get { return GetUnicodeStringAt(8); } }
@@ -9750,7 +9752,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class R2RGetEntryPointStartTraceData : TraceEvent
+    internal sealed class R2RGetEntryPointStartTraceData : TraceEvent
     {
         public long MethodID { get { return GetInt64At(0); } }
         public int ClrInstanceID { get { return GetInt16At(8); } }
@@ -9811,7 +9813,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class MethodJitMemoryAllocatedForCodeTraceData : TraceEvent
+    internal sealed class MethodJitMemoryAllocatedForCodeTraceData : TraceEvent
     {
         public long MethodID { get { return GetInt64At(0); } }
         public long ModuleID { get { return GetInt64At(8); } }
@@ -9896,7 +9898,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class TypeLoadStartTraceData : TraceEvent
+    internal sealed class TypeLoadStartTraceData : TraceEvent
     {
         public int TypeLoadStartID { get { return GetInt32At(0); } }
         public int ClrInstanceID { get { return GetInt16At(4); } }
@@ -9957,7 +9959,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class TypeLoadStopTraceData : TraceEvent
+    internal sealed class TypeLoadStopTraceData : TraceEvent
     {
         public int TypeLoadStartID { get { return GetInt32At(0); } }
         public int ClrInstanceID { get { return GetInt16At(4); } }
@@ -10025,7 +10027,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
     [Flags]
-    public enum GCSettingsFlags : int
+    internal enum GCSettingsFlags : int
     {
         GCSettingsConcurrent =      0x00000001,
         GCSettingsLargePages =      0x00000002,
@@ -10034,7 +10036,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         GCSettingsNoAffinitize =    0x00000010,
     };
 
-    public sealed class GCSettingsRundownTraceData : TraceEvent
+    internal sealed class GCSettingsRundownTraceData : TraceEvent
     {
         public long HardLimit { get { return GetInt64At(0); } }
         public long LOHThreshold { get { return GetInt64At(8); } }
@@ -10124,7 +10126,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class MethodILToNativeMapTraceData : TraceEvent
+    internal sealed class MethodILToNativeMapTraceData : TraceEvent
     {
         private const int ILProlog = -2;    // Returned by ILOffset to represent the prologue of the method
         private const int ILEpilog = -3;    // Returned by ILOffset to represent the epilogue of the method
@@ -10216,7 +10218,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class ClrStackWalkTraceData : TraceEvent
+    internal sealed class ClrStackWalkTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         // Skipping Reserved1
@@ -10306,7 +10308,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class CodeSymbolsTraceData : TraceEvent
+    internal sealed class CodeSymbolsTraceData : TraceEvent
     {
         public long ModuleId { get { return GetInt64At(0); } }
         public int TotalChunks { get { return GetInt16At(8); } }
@@ -10388,7 +10390,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
 
-    public sealed class AppDomainMemAllocatedTraceData : TraceEvent
+    internal sealed class AppDomainMemAllocatedTraceData : TraceEvent
     {
         public long AppDomainID { get { return GetInt64At(0); } }
         public long Allocated { get { return GetInt64At(8); } }
@@ -10456,7 +10458,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AppDomainMemAllocatedTraceData> Action;
         #endregion
     }
-    public sealed class AppDomainMemSurvivedTraceData : TraceEvent
+    internal sealed class AppDomainMemSurvivedTraceData : TraceEvent
     {
         public long AppDomainID { get { return GetInt64At(0); } }
         public long Survived { get { return GetInt64At(8); } }
@@ -10528,7 +10530,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AppDomainMemSurvivedTraceData> Action;
         #endregion
     }
-    public sealed class ThreadCreatedTraceData : TraceEvent
+    internal sealed class ThreadCreatedTraceData : TraceEvent
     {
         public long ManagedThreadID { get { return GetInt64At(0); } }
         public long AppDomainID { get { return GetInt64At(8); } }
@@ -10608,7 +10610,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadCreatedTraceData> Action;
         #endregion
     }
-    public sealed class ThreadTerminatedOrTransitionTraceData : TraceEvent
+    internal sealed class ThreadTerminatedOrTransitionTraceData : TraceEvent
     {
         public long ManagedThreadID { get { return GetInt64At(0); } }
         public long AppDomainID { get { return GetInt64At(8); } }
@@ -10676,7 +10678,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ThreadTerminatedOrTransitionTraceData> Action;
         #endregion
     }
-    public sealed class AppDomainAssemblyResolveHandlerInvokedTraceData : TraceEvent
+    internal sealed class AppDomainAssemblyResolveHandlerInvokedTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public string AssemblyName { get { return GetUnicodeStringAt(2); } }
@@ -10752,7 +10754,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AppDomainAssemblyResolveHandlerInvokedTraceData> Action;
         #endregion
     }
-    public sealed class AssemblyLoadContextResolvingHandlerInvokedTraceData : TraceEvent
+    internal sealed class AssemblyLoadContextResolvingHandlerInvokedTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public string AssemblyName { get { return GetUnicodeStringAt(2); } }
@@ -10832,7 +10834,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AssemblyLoadContextResolvingHandlerInvokedTraceData> Action;
         #endregion
     }
-    public sealed class AssemblyLoadFromResolveHandlerInvokedTraceData : TraceEvent
+    internal sealed class AssemblyLoadFromResolveHandlerInvokedTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public string AssemblyName { get { return GetUnicodeStringAt(2); } }
@@ -10908,7 +10910,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AssemblyLoadFromResolveHandlerInvokedTraceData> Action;
         #endregion
     }
-    public sealed class KnownPathProbedTraceData : TraceEvent
+    internal sealed class KnownPathProbedTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public string FilePath { get { return GetUnicodeStringAt(2); } }
@@ -10980,7 +10982,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<KnownPathProbedTraceData> Action;
         #endregion
     }
-    public sealed class ResolutionAttemptedTraceData : TraceEvent
+    internal sealed class ResolutionAttemptedTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public string AssemblyName { get { return GetUnicodeStringAt(2); } }
@@ -11068,7 +11070,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ResolutionAttemptedTraceData> Action;
         #endregion
     }
-    public sealed class AssemblyLoadStartTraceData : TraceEvent
+    internal sealed class AssemblyLoadStartTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public string AssemblyName { get { return GetUnicodeStringAt(2); } }
@@ -11148,7 +11150,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AssemblyLoadStartTraceData> Action;
         #endregion
     }
-    public sealed class AssemblyLoadStopTraceData : TraceEvent
+    internal sealed class AssemblyLoadStopTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public string AssemblyName { get { return GetUnicodeStringAt(2); } }
@@ -11244,7 +11246,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AssemblyLoadStopTraceData> Action;
         #endregion
     }
-    public sealed class ILStubGeneratedTraceData : TraceEvent
+    internal sealed class ILStubGeneratedTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public long ModuleID { get { return GetInt64At(2); } }
@@ -11344,7 +11346,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ILStubGeneratedTraceData> Action;
         #endregion
     }
-    public sealed class ILStubCacheHitTraceData : TraceEvent
+    internal sealed class ILStubCacheHitTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public long ModuleID { get { return GetInt64At(2); } }
@@ -11429,7 +11431,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public abstract class MethodLoadUnloadTraceDataBase : TraceEvent
+    internal abstract class MethodLoadUnloadTraceDataBase : TraceEvent
     {
         public long MethodID { get { return GetInt64At(0); } }
         public long ModuleID { get { return GetInt64At(8); } }
@@ -11479,7 +11481,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class MethodLoadUnloadTraceData : MethodLoadUnloadTraceDataBase
+    internal sealed class MethodLoadUnloadTraceData : MethodLoadUnloadTraceDataBase
     {
         public int ClrInstanceID { get { if (Version >= 1) { return GetInt16At(36); } return 0; } }
 
@@ -11561,7 +11563,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<MethodLoadUnloadTraceData> Action;
         #endregion
     }
-    public sealed class MethodLoadUnloadVerboseTraceData : MethodLoadUnloadTraceDataBase
+    internal sealed class MethodLoadUnloadVerboseTraceData : MethodLoadUnloadTraceDataBase
     {
         public string MethodNamespace { get { return GetUnicodeStringAt(36); } }
         public string MethodName { get { return GetUnicodeStringAt(SkipUnicodeString(36)); } }
@@ -11661,7 +11663,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class MethodJittingStartedTraceData : TraceEvent
+    internal sealed class MethodJittingStartedTraceData : TraceEvent
     {
         public long MethodID { get { return GetInt64At(0); } }
         public long ModuleID { get { return GetInt64At(8); } }
@@ -11750,7 +11752,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<MethodJittingStartedTraceData> Action;
         #endregion
     }
-    public sealed class ModuleLoadUnloadTraceData : TraceEvent
+    internal sealed class ModuleLoadUnloadTraceData : TraceEvent
     {
         public long ModuleID { get { return GetInt64At(0); } }
         public long AssemblyID { get { return GetInt64At(8); } }
@@ -11890,7 +11892,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<ModuleLoadUnloadTraceData> Action;
         #endregion
     }
-    public sealed class DomainModuleLoadUnloadTraceData : TraceEvent
+    internal sealed class DomainModuleLoadUnloadTraceData : TraceEvent
     {
         public long ModuleID { get { return GetInt64At(0); } }
         public long AssemblyID { get { return GetInt64At(8); } }
@@ -11976,7 +11978,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<DomainModuleLoadUnloadTraceData> Action;
         #endregion
     }
-    public sealed class AssemblyLoadUnloadTraceData : TraceEvent
+    internal sealed class AssemblyLoadUnloadTraceData : TraceEvent
     {
         public long AssemblyID { get { return GetInt64At(0); } }
         public long AppDomainID { get { return GetInt64At(8); } }
@@ -12057,7 +12059,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AssemblyLoadUnloadTraceData> Action;
         #endregion
     }
-    public sealed class AppDomainLoadUnloadTraceData : TraceEvent
+    internal sealed class AppDomainLoadUnloadTraceData : TraceEvent
     {
         public long AppDomainID { get { return GetInt64At(0); } }
         public AppDomainFlags AppDomainFlags { get { return (AppDomainFlags)GetInt32At(8); } }
@@ -12134,7 +12136,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AppDomainLoadUnloadTraceData> Action;
         #endregion
     }
-    public sealed class EventSourceTraceData : TraceEvent
+    internal sealed class EventSourceTraceData : TraceEvent
     {
         public int EventID { get { return GetInt32At(0); } }
         public string Name { get { return GetUnicodeStringAt(4); } }
@@ -12207,7 +12209,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class StrongNameVerificationTraceData : TraceEvent
+    internal sealed class StrongNameVerificationTraceData : TraceEvent
     {
         public int VerificationFlags { get { return GetInt32At(0); } }
         public int ErrorCode { get { return GetInt32At(4); } }
@@ -12280,7 +12282,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<StrongNameVerificationTraceData> Action;
         #endregion
     }
-    public sealed class AuthenticodeVerificationTraceData : TraceEvent
+    internal sealed class AuthenticodeVerificationTraceData : TraceEvent
     {
         public int VerificationFlags { get { return GetInt32At(0); } }
         public int ErrorCode { get { return GetInt32At(4); } }
@@ -12353,7 +12355,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<AuthenticodeVerificationTraceData> Action;
         #endregion
     }
-    public sealed class MethodJitInliningSucceededTraceData : TraceEvent
+    internal sealed class MethodJitInliningSucceededTraceData : TraceEvent
     {
         public string MethodBeingCompiledNamespace { get { return GetUnicodeStringAt(0); } }
         public string MethodBeingCompiledName { get { return GetUnicodeStringAt(SkipUnicodeString(0)); } }
@@ -12449,7 +12451,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<MethodJitInliningSucceededTraceData> Action;
         #endregion
     }
-    public sealed class MethodJitInliningFailedAnsiTraceData : TraceEvent
+    internal sealed class MethodJitInliningFailedAnsiTraceData : TraceEvent
     {
         public string MethodBeingCompiledNamespace { get { return GetUnicodeStringAt(0); } }
         public string MethodBeingCompiledName { get { return GetUnicodeStringAt(SkipUnicodeString(0)); } }
@@ -12554,7 +12556,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class MethodJitInliningFailedTraceData : TraceEvent
+    internal sealed class MethodJitInliningFailedTraceData : TraceEvent
     {
         public string MethodBeingCompiledNamespace { get { return GetUnicodeStringAt(0); } }
         public string MethodBeingCompiledName { get { return GetUnicodeStringAt(SkipUnicodeString(0)); } }
@@ -12659,7 +12661,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class RuntimeInformationTraceData : TraceEvent
+    internal sealed class RuntimeInformationTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public RuntimeSku Sku { get { return (RuntimeSku)GetInt16At(2); } }
@@ -12775,7 +12777,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private event Action<RuntimeInformationTraceData> Action;
         #endregion
     }
-    public sealed class MethodJitTailCallSucceededTraceData : TraceEvent
+    internal sealed class MethodJitTailCallSucceededTraceData : TraceEvent
     {
         public string MethodBeingCompiledNamespace { get { return GetUnicodeStringAt(0); } }
         public string MethodBeingCompiledName { get { return GetUnicodeStringAt(SkipUnicodeString(0)); } }
@@ -12880,7 +12882,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class MethodJitTailCallFailedAnsiTraceData : TraceEvent
+    internal sealed class MethodJitTailCallFailedAnsiTraceData : TraceEvent
     {
         public string MethodBeingCompiledNamespace { get { return GetUnicodeStringAt(0); } }
         public string MethodBeingCompiledName { get { return GetUnicodeStringAt(SkipUnicodeString(0)); } }
@@ -12985,7 +12987,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class MethodJitTailCallFailedTraceData : TraceEvent
+    internal sealed class MethodJitTailCallFailedTraceData : TraceEvent
     {
         public string MethodBeingCompiledNamespace { get { return GetUnicodeStringAt(0); } }
         public string MethodBeingCompiledName { get { return GetUnicodeStringAt(SkipUnicodeString(0)); } }
@@ -13090,7 +13092,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class ExecutionCheckpointTraceData : TraceEvent
+    internal sealed class ExecutionCheckpointTraceData : TraceEvent
     {
         public int ClrInstanceID { get { return GetInt16At(0); } }
         public string CheckpointName { get { return GetUnicodeStringAt(2); } }
@@ -13160,7 +13162,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
     [Flags]
-    public enum AppDomainFlags
+    internal enum AppDomainFlags
     {
         None = 0,
         Default = 0x1,
@@ -13168,7 +13170,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         Shared = 0x4,
     }
     [Flags]
-    public enum AssemblyFlags
+    internal enum AssemblyFlags
     {
         None = 0,
         DomainNeutral = 0x1,
@@ -13178,7 +13180,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         ReadyToRun = 0x10,
     }
     [Flags]
-    public enum ModuleFlags
+    internal enum ModuleFlags
     {
         None = 0,
         DomainNeutral = 0x1,
@@ -13190,7 +13192,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         PartialReadyToRunModule = 0x40,
     }
     [Flags]
-    public enum MethodFlags
+    internal enum MethodFlags
     {
         None = 0,
         Dynamic = 0x1,
@@ -13202,7 +13204,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         ReadyToRunRejectedPrecompiledCode = 0x40,
         // 0x80 to 0x100 are used for the tier
     }
-    public enum OptimizationTier : byte
+    internal enum OptimizationTier : byte
     {
         Unknown, // to identify older runtimes that would send this value
 
@@ -13224,7 +13226,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         PreJIT = byte.MaxValue
     }
     [Flags]
-    public enum StartupMode
+    internal enum StartupMode
     {
         None = 0,
         ManagedExe = 0x1,
@@ -13234,7 +13236,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         Other = 0x10,
     }
     [Flags]
-    public enum RuntimeSku
+    internal enum RuntimeSku
     {
         None = 0,
         DesktopClr = 0x1,
@@ -13242,7 +13244,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         Mono = 0x4,
     }
     [Flags]
-    public enum ExceptionThrownFlags
+    internal enum ExceptionThrownFlags
     {
         None = 0,
         HasInnerException = 0x1,
@@ -13252,7 +13254,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         CLSCompliant = 0x10,
     }
     [Flags]
-    public enum ILStubGeneratedFlags
+    internal enum ILStubGeneratedFlags
     {
         None = 0,
         ReverseInterop = 0x1,
@@ -13263,7 +13265,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         UnmanagedCallee = 0x20,
     }
     [Flags]
-    public enum StartupFlags
+    internal enum StartupFlags
     {
         None = 0,
         CONCURRENT_GC = 0x000001,
@@ -13283,7 +13285,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         ARM = 0x400000,
     }
     [Flags]
-    public enum TypeFlags
+    internal enum TypeFlags
     {
         None = 0,
         Delegate = 0x1,
@@ -13301,7 +13303,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         ArrayRankBit4 = 0x1000,
         ArrayRankBit5 = 0x2000,
     }
-    public static class TypeFlagsHelpers
+    internal static class TypeFlagsHelpers
     {
         public static int GetArrayRank(this TypeFlags flags)
         {
@@ -13312,7 +13314,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         }
     }
     [Flags]
-    public enum GCRootFlags
+    internal enum GCRootFlags
     {
         None = 0,
         Pinning = 0x1,
@@ -13321,39 +13323,39 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         RefCounted = 0x8,
     }
     [Flags]
-    public enum GCRootStaticVarFlags
+    internal enum GCRootStaticVarFlags
     {
         None = 0,
         ThreadLocal = 0x1,
     }
     [Flags]
-    public enum ThreadFlags
+    internal enum ThreadFlags
     {
         None = 0,
         GCSpecial = 0x1,
         Finalizer = 0x2,
         ThreadPoolWorker = 0x4,
     }
-    public enum GCSegmentType
+    internal enum GCSegmentType
     {
         SmallObjectHeap = 0x0,
         LargeObjectHeap = 0x1,
         ReadOnlyHeap = 0x2,
         PinnedObjectHeap = 0x3,
     }
-    public enum GCAllocationKind
+    internal enum GCAllocationKind
     {
         Small = 0x0,
         Large = 0x1,
         Pinned = 0x2
     }
-    public enum GCType
+    internal enum GCType
     {
         NonConcurrentGC = 0x0,      // A 'blocking' GC.
         BackgroundGC = 0x1,         // A Gen 2 GC happening while code continues to run
         ForegroundGC = 0x2,         // A Gen 0 or Gen 1 blocking GC which is happening when a Background GC is in progress.
     }
-    public enum GCReason
+    internal enum GCReason
     {
         AllocSmall = 0x0,
         Induced = 0x1,
@@ -13370,7 +13372,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         PMFullGC = 0xc,
         LowMemoryHostBlocking = 0xd
     }
-    public enum GCSuspendEEReason
+    internal enum GCSuspendEEReason
     {
         SuspendOther = 0x0,
         SuspendForGC = 0x1,
@@ -13382,7 +13384,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         SuspendForDebuggerSweep = 0x7,
     }
 
-    public enum GCPauseMode
+    internal enum GCPauseMode
     {
         Invalid = -1,
         Batch = 0,
@@ -13392,19 +13394,19 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         NoGC = 4
     }
 
-    public enum ContentionFlags
+    internal enum ContentionFlags
     {
         Managed = 0x0,
         Native = 0x1,
     }
-    public enum TailCallType
+    internal enum TailCallType
     {
         Unknown = -1,
         OptimizedTailCall = 0x0,
         RecursiveLoop = 0x1,
         HelperAssistedTailCall = 0x2,
     }
-    public enum ThreadAdjustmentReason
+    internal enum ThreadAdjustmentReason
     {
         Warmup = 0x0,
         Initializing = 0x1,
@@ -13418,7 +13420,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
     [Flags]
-    public enum GCRootRCWFlags
+    internal enum GCRootRCWFlags
     {
         None = 0,
         Duplicate = 1,
@@ -13427,7 +13429,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
     [Flags]
-    public enum GCRootCCWFlags
+    internal enum GCRootCCWFlags
     {
         None = 0,
         Strong = 1,
@@ -13435,7 +13437,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         ExtendsComObject = 4,
     }
 
-    public enum GCRootKind
+    internal enum GCRootKind
     {
         Stack = 0,
         Finalizer = 1,
@@ -13446,7 +13448,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
 
     }
 
-    public enum GCHandleKind
+    internal enum GCHandleKind
     {
         WeakShort = 0x0,
         WeakLong = 0x1,
@@ -13460,7 +13462,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         DependendAsyncPinned = -0x7,
     }
 
-    public enum KnownPathSource
+    internal enum KnownPathSource
     {
         ApplicationAssemblies = 0x0,
         AppNativeImagePaths = 0x1,
@@ -13468,7 +13470,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         PlatformResourceRoots = 0x3,
         SatelliteSubdirectory = 0x4,
     }
-    public enum ResolutionAttemptedResult
+    internal enum ResolutionAttemptedResult
     {
         Success = 0x0,
         AssemblyNotFound = 0x1,
@@ -13477,7 +13479,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         Failure = 0x4,
         Exception = 0x5,
     }
-    public enum ResolutionAttemptedStage
+    internal enum ResolutionAttemptedStage
     {
         FindInLoadContext = 0x0,
         AssemblyLoadContextLoad = 0x1,
@@ -13489,7 +13491,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
     [Flags]
-    public enum TieredCompilationSettingsFlags : uint
+    internal enum TieredCompilationSettingsFlags : uint
     {
         None = 0x0,
         QuickJit = 0x1,
@@ -13500,11 +13502,11 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
 
     // [SecuritySafeCritical]
     [System.CodeDom.Compiler.GeneratedCode("traceparsergen", "1.0")]
-    public sealed class ClrRundownTraceEventParser : TraceEventParser
+    internal sealed class ClrRundownTraceEventParser : TraceEventParser
     {
         public static readonly string ProviderName = "Microsoft-Windows-DotNETRuntimeRundown";
         public static readonly Guid ProviderGuid = new Guid(unchecked((int)0xa669021c), unchecked((short)0xc450), unchecked((short)0x4609), 0xa0, 0x35, 0x5a, 0xf5, 0x9a, 0xf4, 0xdf, 0x18);
-        public enum Keywords : long
+        internal enum Keywords : long
         {
             GC = 0x1,
             Loader = 0x8,
@@ -13893,7 +13895,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         private const TraceEventID ExecutionCheckpointDCEndEventID = (TraceEventID)300;
         #endregion
 
-        public sealed class DCStartEndTraceData : TraceEvent
+        internal sealed class DCStartEndTraceData : TraceEvent
         {
             public int ClrInstanceID { get { if (Version >= 1) return GetInt16At(0); return 0; } }
 
@@ -14021,11 +14023,11 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
     [System.CodeDom.Compiler.GeneratedCode("traceparsergen", "1.0")]
-    public sealed class ClrStressTraceEventParser : TraceEventParser
+    internal sealed class ClrStressTraceEventParser : TraceEventParser
     {
         public static readonly string ProviderName = "Microsoft-Windows-DotNETRuntimeStress";
         public static readonly Guid ProviderGuid = new Guid(unchecked((int)0xcc2bcbba), unchecked((short)0x16b6), unchecked((short)0x4cf3), 0x89, 0x90, 0xd7, 0x4c, 0x2e, 0x8a, 0xf5, 0x00);
-        public enum Keywords : long
+        internal enum Keywords : long
         {
             Stack = 0x40000000,
         };
@@ -14087,7 +14089,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
         #endregion
     }
 
-    public sealed class StressLogTraceData : TraceEvent
+    internal sealed class StressLogTraceData : TraceEvent
     {
         public int Facility { get { return GetInt32At(0); } }
         public int LogLevel { get { return GetByteAt(4); } }
@@ -14162,7 +14164,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Clr
     }
 
     [Flags]
-    public enum GCGlobalMechanisms
+    internal enum GCGlobalMechanisms
     {
         None = 0,
         Concurrent = 0x1,

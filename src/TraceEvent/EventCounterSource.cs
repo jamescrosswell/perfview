@@ -1,4 +1,6 @@
-﻿
+#nullable disable
+
+
 #if false 
 namespace Microsoft.Diagnostics.Tracing
 {

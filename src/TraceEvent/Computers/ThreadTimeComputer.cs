@@ -1,4 +1,6 @@
-﻿using Microsoft.Diagnostics.Symbols;
+#nullable disable
+
+using Microsoft.Diagnostics.Symbols;
 using Microsoft.Diagnostics.Tracing.Etlx;
 using Microsoft.Diagnostics.Tracing.Parsers;
 using Microsoft.Diagnostics.Tracing.Parsers.AspNet;
@@ -26,8 +28,8 @@ namespace Microsoft.Diagnostics.Tracing
     /// A ThreadTimeComputer does a simple simulation of what each thread is doing to create stack events that represent 
     /// CPU, blocked time, disk and Network activity.  
     /// </summary>
-    [Obsolete("This is not obsolete but experimental, its interface is likely to change")]
-    public class ThreadTimeStackComputer
+    // [Obsolete("This is not obsolete but experimental, its interface is likely to change")]
+    internal class ThreadTimeStackComputer
     {
         /// <summary>
         /// Create a new ThreadTimeComputer
@@ -64,7 +66,7 @@ namespace Microsoft.Diagnostics.Tracing
         /// <summary>
         /// If set we compute blocked time 
         /// </summary>
-        [Obsolete("Use Thread Time instead")]
+        // [Obsolete("Use Thread Time instead")]
         public bool BlockedTimeOnly;
         /// <summary>
         /// If set we don't show ready thread information 
