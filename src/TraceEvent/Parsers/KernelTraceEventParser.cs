@@ -4465,7 +4465,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Kernel
 
         public ThreadWaitReason OldThreadWaitReason { get { return (ThreadWaitReason)GetByteAt(0xc); } }
         public ThreadWaitMode OldThreadWaitMode { get { return (ThreadWaitMode)GetByteAt(0xd); } }
-        public ThreadState OldThreadState { get { return (ThreadState)GetByteAt(0xe); } }
+        public System.Diagnostics.ThreadState OldThreadState { get { return (System.Diagnostics.ThreadState)GetByteAt(0xe); } }
         public int OldThreadWaitIdealProcessor { get { return GetByteAt(15); } }
         public int NewThreadWaitTime { get { return GetInt32At(16); } }
         // Skipping Reserved
@@ -4601,7 +4601,7 @@ namespace Microsoft.Diagnostics.Tracing.Parsers.Kernel
             }
         }
 
-        private string ToString(ThreadState state)
+        private string ToString(System.Diagnostics.ThreadState state)
         {
             switch (state)
             {
