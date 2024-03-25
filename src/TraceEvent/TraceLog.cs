@@ -13,6 +13,7 @@ using Microsoft.Diagnostics.Tracing.Parsers.AspNet;
 using Microsoft.Diagnostics.Tracing.Parsers.Clr;
 using Microsoft.Diagnostics.Tracing.Parsers.ClrPrivate;
 using Microsoft.Diagnostics.Tracing.Parsers.FrameworkEventSource;
+using Microsoft.Diagnostics.Tracing.Parsers.GCDynamic;
 using Microsoft.Diagnostics.Tracing.Parsers.JScript;
 using Microsoft.Diagnostics.Tracing.Parsers.Kernel;
 using Microsoft.Diagnostics.Tracing.Parsers.Symbol;
@@ -185,7 +186,7 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
         /// importantly TraceEvent.CallStack() will work. Thus you can get real time stacks from events).
         /// </summary>
         /// <param name="rundownConfiguration">
-        /// If enabled, a rundown is triggered immediately as a separate session. 
+        /// If enabled, a rundown is triggered immediately as a separate session.
         /// This is used to initialize module and method information and then the session is closed.
         /// This only makes sense in realtime sessions when you need to resolve function names during the session.
         /// </param>
@@ -214,7 +215,8 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
                 using (var rundownSession = rundownDiagnosticsClient.StartEventPipeSession(
                     new EventPipeProvider(ClrTraceEventParser.ProviderName, EventLevel.Informational, (long)ClrTraceEventParser.Keywords.Default),
                     requestRundown: true
-                )) {
+                ))
+                {
                     traceLog.ProcessInitialRundown(rundownSession);
                 }
             }
@@ -800,9 +802,23 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
         /// </summary>
         private unsafe void DispatchClonedEvent(TraceEvent toSend)
         {
+            // Self describing metadata doesn't make it to realTimeSource because TraceLog overwrites the event's extended data.
+            // To address this, we use the event from the raw source, which contains the metadata,
+            // and convert it to a template that can be registered with realTimeSource.
+            realTimeSource.RegisterUnhandledEventImpl(te =>
+            {
+                if (toSend.containsSelfDescribingMetadata)
+                {
+                    var template = toSend.CloneToTemplate();
+                    realTimeSource.Dynamic.OnNewEventDefintion(template, true);
+                    return true;
+                }
+                return false;
+            });
             TraceEvent eventInRealTimeSource = realTimeSource.Lookup(toSend.eventRecord);
             eventInRealTimeSource.userData = toSend.userData;
             eventInRealTimeSource.eventIndex = toSend.eventIndex;           // Lookup assigns the EventIndex, but we want to keep the original.
+            eventInRealTimeSource.myBuffer = toSend.myBuffer;
             realTimeSource.Dispatch(eventInRealTimeSource);
 
             // Optimization, remove 'toSend' from the finalization queue.
@@ -811,6 +827,7 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
             // Do the cleanup, but also keep toSend alive during the dispatch and until finalization was suppressed.
             System.Runtime.InteropServices.Marshal.FreeHGlobal(toSend.myBuffer);
             toSend.instanceContainerID = null;
+            eventInRealTimeSource.myBuffer = IntPtr.Zero;
         }
 
         /// <summary>
@@ -1100,6 +1117,7 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
             // at file creation time.
             var kernelParser = Kernel;
             var clrParser = Clr;
+            new GCDynamicTraceEventParser(this);
             new ClrRundownTraceEventParser(this);
             new ClrStressTraceEventParser(this);
             new ClrPrivateTraceEventParser(this);
@@ -1277,6 +1295,12 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
             rawEvents.Clr.GCJoin += doNothing;
             rawEvents.Clr.GCFinalizeObject += doNothing;
             rawEvents.Clr.MethodJittingStarted += doNothing;
+
+            // This is required to ensure that self-describing metadata gets ingested before the event's extended data gets overwritten by the TraceLog.
+            if (IsRealTime)
+            {
+                rawEvents.Dynamic.All += doNothing;
+            }
 
             //kernelParser.AddCallbackForEvents<PageFaultTraceData>(doNothing);        // Lots of page fault ones
             //kernelParser.AddCallbackForEvents<PageAccessTraceData>(doNothing);
@@ -1980,6 +2004,22 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
                     sampleProfileInterval100ns = data.OldInterval;
                 }
             };
+
+            // This is a bit of a hack because the dynamic parser doesn't quite work with EventPipeEventSource
+            // directly.  We should fix this and then switch to using DynamicTraceEventParser directly.
+            if (rawEvents is EventPipeEventSource)
+            {
+                Guid eventPipeProviderGuid = new Guid("92f528a6-f5b8-5160-a7ee-b33da7739e29");
+                rawEvents.UnhandledEvents += delegate (TraceEvent data)
+                {
+                    if (data.ProviderGuid == eventPipeProviderGuid && data.ID == (TraceEventID)1)
+                    {
+                        string cmd = data.GetUnicodeStringAt(0);
+                        processes.GetOrCreateProcess(data.ProcessID, data.TimeStampQPC)
+                            .FromEventPipeProcessInfo(cmd);
+                    }
+                };
+            }
         }
 
         /// <summary>
@@ -1991,6 +2031,11 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
         private unsafe void CopyRawEvents(TraceEventDispatcher rawEvents, IStreamWriter writer)
         {
             SetupCallbacks(rawEvents);
+
+            // The GC dynamic parser needs to be created here to ensure that any events
+            // that belong to it get its custom handling so that the events are
+            // parsed property and then copied into the resulting ETLX file in their final form.
+            GC.KeepAlive(new GCDynamicTraceEventParser(rawEvents));
 
             // Fix up MemInfoWS records so that we get one per process rather than one per machine
             rawEvents.Kernel.MemoryProcessMemInfo += delegate (MemoryProcessMemInfoTraceData data)
@@ -5871,6 +5916,30 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
                 endTimeQPC = data.TimeStampQPC;
             }
             Log.DebugWarn(startTimeQPC <= endTimeQPC, "Process Ends before it starts! StartTime: " + StartTimeRelativeMsec.ToString("f4"), data);
+        }
+        internal void FromEventPipeProcessInfo(string cmd)
+        {
+            if (!string.IsNullOrEmpty(cmd))
+            {
+                commandLine = cmd;
+
+                // Separate the image file name from command line arguments.
+                int firstIndexOfSpace = cmd.IndexOf(' ');
+                if (firstIndexOfSpace > 0)
+                {
+                    imageFileName = cmd.Substring(0, firstIndexOfSpace);
+
+                    // Remove quotes around the image file name if present.
+                    if (imageFileName.Length > 2 && imageFileName[0] == '\"' && imageFileName[imageFileName.Length - 1] == '\"')
+                    {
+                        imageFileName = imageFileName.Substring(1, imageFileName.Length - 2);
+                    }
+                }
+                else
+                {
+                    imageFileName = cmd;
+                }
+            }
         }
 
         /// <summary>
@@ -10797,7 +10866,10 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
                 throw new InvalidOperationException("Attempted to use TraceLog support on a non-TraceLog TraceEventSource.");
             }
             TraceProcess ret = log.Processes.GetProcess(anEvent.ProcessID, anEvent.TimeStampQPC);
-            Debug.Assert(ret != null);
+            // When the trace was converted, a TraceProcess should have been created for
+            // every mentioned Process ID.
+            // When we care, we should ensure this is true for the RealTime case.
+            Debug.Assert(ret != null || log.IsRealTime);
             return ret;
         }
         /// <summary>
@@ -10812,7 +10884,10 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
                 throw new InvalidOperationException("Attempted to use TraceLog support on a non-TraceLog TraceEventSource.");
             }
             TraceThread ret = log.Threads.GetThread(anEvent.ThreadID, anEvent.TimeStampQPC);
-            Debug.Assert(ret != null);
+            // When the trace was converted, a TraceThread should have been created for
+            // every mentioned Thread ID.
+            // When we care, we should ensure this is true for the RealTime case.
+            Debug.Assert(ret != null || log.IsRealTime);
             return ret;
         }
         /// <summary>
