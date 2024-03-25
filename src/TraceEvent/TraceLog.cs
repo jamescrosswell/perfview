@@ -10551,11 +10551,10 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
             }
         }
 
-        // TODO make public?
         /// <summary>
         /// Computes the creator path back to root.
         /// </summary>
-        internal string Path
+        public string Path
         {
             get
             {
