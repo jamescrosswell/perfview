@@ -224,17 +224,29 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
             return traceLog.realTimeSource;
         }
 
+        /// <summary>
+        /// EventPipe real-time tracelog session configuration, used to populate the method and module information.
+        /// </summary>
         public class EventPipeRundownConfiguration
         {
             internal readonly DiagnosticsClient m_client;
 
             private EventPipeRundownConfiguration(DiagnosticsClient client) { m_client = client; }
 
+            /// <summary>
+            /// No rundown will be requested, thus it may be impossible to symbolicate events. This is OK, if you don't
+            /// require method/module info the captured events.
+            /// </summary>
             public static EventPipeRundownConfiguration None()
             {
                 return new EventPipeRundownConfiguration(null);
             }
 
+            /// <summary>
+            /// If the rundown is enabled and a DiagnosticsClient is given, TraceLog.CreateFromEventPipeSession will
+            /// create an additional short-lived diagnostics session to load all module/method information up to that
+            /// point.
+            /// </summary>
             public static EventPipeRundownConfiguration Enable(DiagnosticsClient client)
             {
                 return new EventPipeRundownConfiguration(client);
@@ -318,12 +330,6 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
                 rawEventSourceToConvert.currentID = (EventIndex)eventCount;
             }
 
-            // Skip samples from the idle thread.
-            if (data.ProcessID == 0 && data is SampledProfileTraceData)
-            {
-                return;
-            }
-
             var extendedDataCount = data.eventRecord->ExtendedDataCount;
             if (extendedDataCount != 0)
             {
@@ -338,6 +344,11 @@ namespace Microsoft.Diagnostics.Tracing.Etlx
             // We need to look up the event to get the dispatch Target assigned.
             TraceEvent rtEvent = realTimeSource.Lookup(data.eventRecord);
             realTimeSource.Dispatch(rtEvent);
+
+            // Clean up interim data structures - they're not necessary after the event has been processed (Dispatched).
+            eventsToStacks.Clear();
+            eventsToCodeAddresses.Clear();
+            cswitchBlockingEventsToStacks.Clear();
         }
 
         /// <summary>
